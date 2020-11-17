@@ -2,11 +2,9 @@
 
 namespace ultimate_tictactoe {
 
-enum class WinState {
-  kPlayer1Win,
-  kPlayer2Win,
-  kTie,
-  kInProgress
+enum class Player {
+  kPlayer1,
+  kPlayer2
 };
 
 }  // namespace ultimate_tictactoe

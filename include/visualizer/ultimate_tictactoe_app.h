@@ -1,8 +1,28 @@
-//
-// Created by colin on 11/17/20.
-//
+#pragma once
 
-#ifndef FINAL_PROJECT_SIMPLEGEOMETRY_ULTIMATE_TICTACTOE_APP_H
-#define FINAL_PROJECT_SIMPLEGEOMETRY_ULTIMATE_TICTACTOE_APP_H
+#include "cinder/app/App.h"
+#include "cinder/app/RendererGl.h"
+#include "cinder/gl/gl.h"
 
-#endif //FINAL_PROJECT_SIMPLEGEOMETRY_ULTIMATE_TICTACTOE_APP_H
+namespace ultimate_tictactoe {
+
+namespace visualizer {
+
+class UltimateTicTacToeApp : public ci::app::App {
+ public:
+  UltimateTicTacToeApp();
+
+  void draw() override;
+  void mouseDown(ci::app::MouseEvent event) override;
+  void mouseDrag(ci::app::MouseEvent event) override;
+  void keyDown(ci::app::KeyEvent event) override;
+
+  const double kWindowSize = 875;
+  const double kMargin = 100;
+
+ private:
+};
+
+}  // namespace visualizer
+
+}  // namespace ultimate_tictactoe
