@@ -34,7 +34,8 @@ public:
   SubBoard();
 
   // Makes a move for the current player at the location described by the action
-  // passed in (only makes use of the 2 fields of Action pertaining to a sub-board).
+  // passed in (only makes use of the 2 fields of Action pertaining to a sub-board,
+  // and ignores the other two fields).
   // Throws an invalid_argument exception if the move is invalid, as described 
   // by IsValidMove (note this is different from Board.IsValidMove()).
   void PlayMove(Action a, Player current_player);
