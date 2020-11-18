@@ -33,16 +33,31 @@ class Board {
   Player GetCurrentPlayer() const;
   
   // Returns true iff the move is valid. A move is invalid iff any of the 
-  // following conditions hold:
-  //   - The move is out of bounds (for either the sub-board choice or the location
-  //     within a sub-board).
+  // following conditions hold.
+  //
+  // Conditions relating to the overall board, or determining the relevant sub-board:
+  //   - The move attempts to specify an out-of-bounds sub-board.
+  //   - The move is not on the sub-board that must be played on, as determined
+  //     by the previous player's move.
+  //   - The game has already ended (the IsComplete method returns true).
+  //
+  // Conditions relating to the state of the specified sub-board (determined by SubBoard.IsValidMove):
+  //   - The move is out of bounds of the specified sub-board.
   //   - The move is on a filled location.
   //   - The move is in a completed sub-board.
-  //   - The game has already ended (the IsComplete method returns true).
   bool IsValidMove(Action a) const;
   
  private:
   Player current_player_;
+  
+  // Variables relating to the valid sub-board that must be played on by
+  // the player denoted by current_player_. If specified_next_sub_board_ is
+  // true, the player is restricted to a certain sub-board, specified by
+  // next_sub_board_row_ and next_sub_board_col_.
+  size_t next_sub_board_row_;
+  size_t next_sub_board_col_;
+  bool specified_next_sub_board_;
+  
   vector<vector<SubBoard>> sub_boards_;
 };
   
