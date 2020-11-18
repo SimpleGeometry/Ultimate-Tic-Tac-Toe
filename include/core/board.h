@@ -64,6 +64,20 @@ class Board {
   bool specified_next_sub_board_;
   
   vector<vector<SubBoard>> sub_boards_;
+  
+  static constexpr size_t kBoardSize = 3;
+  
+  bool CheckPlayerHorizontalWin(Player player) const;
+  bool CheckPlayerVerticalWin(Player player) const;
+  bool CheckPlayerDiagonalWin(Player player) const;
+  
+  bool SubBoardOutOfBounds(Action a) const;
+  
+  // Returns true if specified_next_sub_board_ is false (i.e. all sub_boards
+  // are valid), or, if specified_next_sub_board is true, whether the row
+  // and column indicated by the action matches next_sub_board_row_ and
+  // next_sub_board_col_.
+  bool InRequiredSubBoard(Action a) const;
 };
   
 }  // namespace ultimate_tictactoe

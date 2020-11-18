@@ -191,8 +191,8 @@ TEST_CASE("Testing Board's GetWinner method") {
     // Move 19
     board.PlayMove({1, 1, 1, 2});
     board.PlayMove({0, 1, 1, 1});
-    board.PlayMove({1, 1, 1, 2});
-    board.PlayMove({1, 2, 1, 2});
+    board.PlayMove({1, 1, 2, 1});
+    board.PlayMove({2, 1, 1, 2});
     board.PlayMove({0, 2, 1, 0});
     board.PlayMove({1, 0, 2, 1});
     
@@ -234,6 +234,7 @@ TEST_CASE("Testing Board's GetWinner method") {
     board.PlayMove({0, 0, 0, 1});
     board.PlayMove({2, 0, 1, 1});
     board.PlayMove({2, 0, 0, 2});
+    board.PlayMove({2, 0, 2, 2});
     REQUIRE(board.GetWinner() == WinState::kTie);
   }
 }
@@ -290,8 +291,8 @@ TEST_CASE("Testing Board's IsComplete method") {
     // Move 19
     board.PlayMove({1, 1, 1, 2});
     board.PlayMove({0, 1, 1, 1});
-    board.PlayMove({1, 1, 1, 2});
-    board.PlayMove({1, 2, 1, 2});
+    board.PlayMove({1, 1, 2, 1});
+    board.PlayMove({2, 1, 1, 2});
     board.PlayMove({0, 2, 1, 0});
     board.PlayMove({1, 0, 2, 1});
 
@@ -333,6 +334,7 @@ TEST_CASE("Testing Board's IsComplete method") {
     board.PlayMove({0, 0, 0, 1});
     board.PlayMove({2, 0, 1, 1});
     board.PlayMove({2, 0, 0, 2});
+    board.PlayMove({2, 0, 2, 2});
     REQUIRE(board.IsComplete());
   }
 

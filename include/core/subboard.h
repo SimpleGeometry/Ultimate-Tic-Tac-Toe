@@ -63,6 +63,14 @@ public:
 
 private:
   vector<vector<Mark>> grid_;
+  
+  static constexpr size_t kSubBoardSize = 3;
+
+  bool CheckPlayerHorizontalWin(Player player) const;
+  bool CheckPlayerVerticalWin(Player player) const;
+  bool CheckPlayerDiagonalWin(Player player) const;
+  
+  bool OutOfBounds(Action a) const;
 };
 
 }  // namespace ultimate_tictactoe
