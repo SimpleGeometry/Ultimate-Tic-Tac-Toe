@@ -11,6 +11,10 @@ using std::vector;
 
 class Board {
  public:
+  // Initializes an Ultimate TTT board, consisting of 3x3 sub-boards, which
+  // are each 3x3 grids. All sub-boards are empty.
+  Board();
+  
   // Makes a move for the current player at the location described by the action
   // passed in. Throws an invalid_argument exception if the move is invalid, as
   // described by IsValidMove.
@@ -53,7 +57,8 @@ class Board {
   // Variables relating to the valid sub-board that must be played on by
   // the player denoted by current_player_. If specified_next_sub_board_ is
   // true, the player is restricted to a certain sub-board, specified by
-  // next_sub_board_row_ and next_sub_board_col_.
+  // next_sub_board_row_ and next_sub_board_col_. The row and column are left
+  // unchanged if the specified_next_sub_board_ is set to false.
   size_t next_sub_board_row_;
   size_t next_sub_board_col_;
   bool specified_next_sub_board_;

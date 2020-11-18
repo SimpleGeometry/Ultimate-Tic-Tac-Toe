@@ -29,6 +29,9 @@ public:
     kPlayer2,
     kNone
   };
+  
+  // Initializes a 3x3 sub-board with all grid locations set to empty
+  SubBoard();
 
   // Makes a move for the current player at the location described by the action
   // passed in (only makes use of the 2 fields of Action pertaining to a sub-board).
