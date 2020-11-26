@@ -2,32 +2,34 @@
 
 #include <catch2/catch.hpp>
 #include <core/subboard.h>
+#include <core/mark.h>
 
 using ultimate_tictactoe::SubBoard;
 using ultimate_tictactoe::Player;
 using ultimate_tictactoe::WinState;
+using ultimate_tictactoe::Mark;
 
 TEST_CASE("Testing SubBoard's PlayMove method") {
   SECTION("Play a move on an empty sub-board") {
     SubBoard sub_board;
     sub_board.PlayMove({0, 0, 1, 1}, Player::kPlayer1);
-    REQUIRE(sub_board.GetState()[1][1] == SubBoard::Mark::kPlayer1);
+    REQUIRE(sub_board.GetState()[1][1].GetState() == Mark::MarkData::kPlayer1);
   }
 
   SECTION("Play a move on a non-empty sub-board, from Player 1") {
     SubBoard sub_board;
     sub_board.PlayMove({0, 0, 1, 1}, Player::kPlayer1);
     sub_board.PlayMove({0, 0, 2, 2}, Player::kPlayer1);
-    REQUIRE(sub_board.GetState()[1][1] == SubBoard::Mark::kPlayer1);
-    REQUIRE(sub_board.GetState()[2][2] == SubBoard::Mark::kPlayer1);
+    REQUIRE(sub_board.GetState()[1][1].GetState() == Mark::MarkData::kPlayer1);
+    REQUIRE(sub_board.GetState()[2][2].GetState() == Mark::MarkData::kPlayer1);
   }
 
   SECTION("Play a move on a non-empty sub-board, from Player 2") {
     SubBoard sub_board;
     sub_board.PlayMove({0, 0, 1, 1}, Player::kPlayer1);
     sub_board.PlayMove({0, 0, 2, 2}, Player::kPlayer2);
-    REQUIRE(sub_board.GetState()[1][1] == SubBoard::Mark::kPlayer1);
-    REQUIRE(sub_board.GetState()[2][2] == SubBoard::Mark::kPlayer2);
+    REQUIRE(sub_board.GetState()[1][1].GetState() == Mark::MarkData::kPlayer1);
+    REQUIRE(sub_board.GetState()[2][2].GetState() == Mark::MarkData::kPlayer2);
   }
   
   SECTION("Playing on an out-of-bounds grid location should throw an exception") {

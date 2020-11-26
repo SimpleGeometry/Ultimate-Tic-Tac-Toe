@@ -5,6 +5,7 @@
 #include <core/win_state.h>
 #include <core/player.h>
 #include <core/action.h>
+#include <core/mark.h>
 
 namespace ultimate_tictactoe {
 
@@ -15,21 +16,13 @@ using std::vector;
 // nine sub-boards within the larger Ultimate TicTacToe board.
 //
 // Some methods or method behaviors may seem redundant when considered together 
-// with the Board class, such as throwing an exception in PlayMove if the move
-// is invalid (since when SubBoard.PlayMove is called from Board.PlayMove, it
-// will never be invalid, since Board.PlayMove has already checked for validity),
+// with the SuperBoard class, such as throwing an exception in PlayMove if the move
+// is invalid (since when SubBoard.PlayMove is called from SuperBoard.PlayMove, it
+// will never be invalid, since SuperBoard.PlayMove has already checked for validity),
 // but these kinds of checks are meant to allow correctness when used as an 
 // independent component.
 class SubBoard {
 public:
-  // Represents the value of a grid within the sub-board, either indicating
-  // that a player has played there, or no player has played there yet.
-  enum class Mark {
-    kPlayer1,
-    kPlayer2,
-    kNone
-  };
-  
   // Initializes a 3x3 sub-board with all grid locations set to empty
   SubBoard();
 
@@ -37,8 +30,8 @@ public:
   // passed in (only makes use of the 2 fields of Action pertaining to a sub-board,
   // and ignores the other two fields).
   // Throws an invalid_argument exception if the move is invalid, as described 
-  // by IsValidMove (note this is different from Board.IsValidMove()).
-  void PlayMove(Action a, Player current_player);
+  // by IsValidMove (note this is different from SuperBoard.IsValidMove()).
+  void PlayMove(const Action& a, const Player& current_player);
 
   // Returns a WinState object describing the state of the current sub-board.
   // If one of the two players has won, returns kPlayer1Win or kPlayer2Win.
@@ -54,23 +47,28 @@ public:
   // of the sub-board (simply a getter method).
   const vector<vector<Mark>>& GetState() const;
 
-  // Returns true iff the move is valid. A move is invalid iff any of the 
+  // Returns true iff the move is valid. Conditions for validity are in the documentation
+  // for RequireValidMove.
+  bool IsValidMove(const Action& a) const;
+
+  // Throws an exception iff the move is invalid. A move is invalid iff any of the 
   // following conditions hold:
   //   - The move is out of bounds of the sub-board.
   //   - The move is on a filled location.
   //   - The sub-board has already been completed (the IsComplete method returns true).
-  bool IsValidMove(Action a) const;
+  void RequireValidMove(const Action& a) const;
 
 private:
   vector<vector<Mark>> grid_;
   
   static constexpr size_t kSubBoardSize = 3;
 
-  bool CheckPlayerHorizontalWin(Player player) const;
-  bool CheckPlayerVerticalWin(Player player) const;
-  bool CheckPlayerDiagonalWin(Player player) const;
+  bool CheckPlayerWin(const Player& player) const;
+  bool CheckPlayerHorizontalWin(const Player& player) const;
+  bool CheckPlayerVerticalWin(const Player& player) const;
+  bool CheckPlayerDiagonalWin(const Player& player) const;
   
-  bool OutOfBounds(Action a) const;
+  bool OutOfBounds(const Action& a) const;
 };
 
 }  // namespace ultimate_tictactoe
