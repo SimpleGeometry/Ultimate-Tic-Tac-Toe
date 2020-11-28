@@ -16,7 +16,9 @@ class Mark {
     kNone
   };
   
-  Mark() = default;
+  // Initializes mark to kNone by default.
+  Mark();
+  
   Mark(MarkData mark);
   
   // Returns kPlayer1Win if mark is kPlayer1, kPlayer2Win if mark is kPlayer2,

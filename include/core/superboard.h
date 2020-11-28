@@ -12,28 +12,15 @@ using std::vector;
 
 class SuperBoard : public Board<SubBoard> {
  public:
-  // Initializes an Ultimate TTT board, consisting of 3x3 sub-boards, which
-  // are each 3x3 grids. All sub-boards are empty.
+  // Initializes an Ultimate TTT board, consisting of kBoardSize x kBoardSize
+  // sub-boards, which are each kBoardSize x kBoardSize grids, where kBoardSize
+  // is defined in Board. All sub-boards are empty.
   SuperBoard();
   
   // Makes a move for the current player at the location described by the action
   // passed in. Throws an invalid_argument exception if the move is invalid, as
   // described by IsValidMove.
   void PlayMove(const Action& a);
-  
-  // Returns a WinState object describing the state of the current game.
-  // If one of the two players has won, returns kPlayer1Win or kPlayer2Win.
-  // If there is a tie (game is complete and there's no win), then returns kTie.
-  // Otherwise (i.e. game is incomplete), returns kInProgress.
-  WinState GetWinner() const;
-  
-  // Returns whether the game is finished (no more moves may be made) due to
-  // the game being won, or no more moves are available.
-  bool IsComplete() const;
-  
-  // Returns a const reference to a 2D vector representing the current state
-  // of the board (simply a getter method).
-  const vector<vector<SubBoard>>& GetState() const;
   
   Player GetCurrentPlayer() const;
   
@@ -67,15 +54,6 @@ class SuperBoard : public Board<SubBoard> {
   size_t next_sub_board_row_;
   size_t next_sub_board_col_;
   bool specified_next_sub_board_;
-  
-  vector<vector<SubBoard>> sub_boards_;
-  
-  static constexpr size_t kBoardSize = 3;
-  
-  bool CheckPlayerWin(const Player& player) const;
-  bool CheckPlayerHorizontalWin(const Player& player) const;
-  bool CheckPlayerVerticalWin(const Player& player) const;
-  bool CheckPlayerDiagonalWin(const Player& player) const;
   
   bool SubBoardOutOfBounds(const Action& a) const;
   

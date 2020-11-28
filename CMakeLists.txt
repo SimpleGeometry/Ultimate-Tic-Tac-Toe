@@ -54,7 +54,7 @@ list(APPEND CORE_SOURCE_FILES src/core/superboard.cc src/core/subboard.cc src/co
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
         src/visualizer/ultimate_tictactoe_app.cc)
 
-list(APPEND TEST_FILES tests/board_test.cc tests/subboard_test.cc)
+list(APPEND TEST_FILES tests/superboard_test.cc tests/subboard_test.cc)
 
 ci_make_app(
         APP_NAME        ultimate-tictactoe-game

@@ -2,6 +2,8 @@
 
 namespace ultimate_tictactoe {
   
+Mark::Mark() : mark(MarkData::kNone) {}
+  
 Mark::Mark(MarkData mark) : mark(mark) {}
 
 WinState Mark::GetWinner() const {
