@@ -6,7 +6,7 @@
 #include <core/superboard.h>
 #include <core/subboard.h>
 #include <core/mark.h>
-#include <core/AI.h>
+#include <core/ai.h>
 #include <visualizer/completion_stage.h>
 
 namespace ultimate_tictactoe {
@@ -41,6 +41,8 @@ class UltimateTicTacToeApp : public ci::app::App {
   const float kMarkMargin = 10;
   const float kMarkCornerRadius = 6;
   
+  const ci::Color kInfoPanelColor = ci::Color::gray(0.75);
+  
   const ci::Color kPlayer1Color = ci::Color(215/255.0f, 25/255.0f, 22/255.0f); // Shade of red
   const ci::Color kPlayer2Color = ci::Color(66/255.0f, 174/255.0f, 228/255.0f); // Shade of blue
   
@@ -52,17 +54,59 @@ class UltimateTicTacToeApp : public ci::app::App {
   const ci::Color kSubBoardAvailableColor = ci::Color(255/255.0f, 255/255.0f, 0/255.0f); // Yellow
   const ci::Color kSubBoardAvailableColorLight = ci::Color(255/255.0f, 255/255.0f, 141/255.0f); // Shade of yellow
   
+  const vec2 kStartOrResetButtonTopLeft = {1250, 750};
+  const vec2 kStartOrResetButtonBottomRight = {1550, 850};
+  const ci::Color kStartOrResetButtonColor = ci::Color::gray(0.65);
+  const ci::Color kStartOrResetButtonColorDark = ci::Color::gray(0.55);
+  const ci::Color kStartOrResetButtonFontColor = ci::Color::black();
+  const ci::Font kStartOrResetButtonFont = ci::Font("Roboto", 24);
+  
+  const vec2 kGameCompletionMessageTopLeft = {1250, 625};
+  const vec2 kGameCompletionMessageBottomRight = {1550, 725};
+  const ci::Color kGameCompletionMessageBackgroundColor = ci::Color::gray(0.4);
+  const ci::Color kGameCompletionMessageFontColor = ci::Color::black();
+  const ci::Font kGameCompletionMessageFont = ci::Font("Roboto", 24);
+  
+  const vec2 kP1AIToggleButtonTopLeft = {1250, 200};
+  const vec2 kP1AIToggleButtonBottomRight = {1550, 300};
+  const vec2 kP2AIToggleButtonTopLeft = {1250, 400};
+  const vec2 kP2AIToggleButtonBottomRight = {1550, 500};
+  const float kAIToggleButtonTitleOffset = -100;
+  const ci::Color kP1AIToggleButtonColor = kPlayer1Color;
+  const ci::Color kP1AIToggleButtonColorDark =  ci::Color(189/255.0f, 22/255.0f, 19/255.0f);
+  const ci::Color kP2AIToggleButtonColor = kPlayer2Color;
+  const ci::Color kP2AIToggleButtonColorDark = ci::Color(56/255.0f, 147/255.0f, 192/255.0f);
+  const ci::Color kAIButtonFontColor = ci::Color::black();
+  const ci::Font kAIButtonFont = ci::Font("Roboto", 24);
+
  private:
   SuperBoard board_;
   
   CompletionStage completion_stage_;
   bool p1_is_AI_;
   bool p2_is_AI_;
+  AI p1_AI_;
+  AI p2_AI_;
+  
+  void UpdateGameAndAIBoards(const Action& a);
+  void ResetGameAndAIBoards();
   
   void DrawSuperBoard() const;
   void DrawInfoPanel() const;
   void DrawHover() const;
   void DrawAvailableSubBoardIndicator() const;
+  
+  void DrawAIToggleButtonsAndText() const;
+  void HandleAIToggleButtonClick(cinder::app::MouseEvent event);
+  bool MouseIsOnP1AIToggleButton(vec2 mouse_pos) const;
+  bool MouseIsOnP2AIToggleButton(vec2 mouse_pos) const;
+  
+  void DrawStartOrResetGameButton() const;
+  bool MouseIsOnStartOrResetGameButton(vec2 mouse_pos) const;
+  void HandleStartOrResetGameButtonClick(cinder::app::MouseEvent event);
+  void HandleBoardClick(cinder::app::MouseEvent event);
+  
+  void DrawGameCompletionMessage() const;
   
   void DrawSubBoard(size_t row_in_super_board, size_t col_in_super_board, const SubBoard& sub_board) const;
   void DrawSubBoardBackgroundForCompletion(size_t row_in_super_board, size_t col_in_super_board, const SubBoard& sub_board) const;

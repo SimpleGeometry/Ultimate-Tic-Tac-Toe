@@ -9,6 +9,7 @@ class AI {
  public:
   Action GetMove();
   void UpdateState(Action a);
+  void ResetState();
   
  private:
   SuperBoard state_;
