@@ -15,8 +15,8 @@ void BoardView::DrawSuperBoard(const SuperBoard& board_, const vec2& mouse_pos, 
     DrawHover(board_, mouse_pos, current_player_is_human);
   }
   
-  for (size_t row = 0; row < 3; row++) {
-    for (size_t col = 0; col < 3; col++) {
+  for (size_t row = 0; row < kBoardSize; row++) {
+    for (size_t col = 0; col < kBoardSize; col++) {
       DrawSubBoard(row, col, board_.GetState()[row][col]);
     }
   }
@@ -25,9 +25,7 @@ void BoardView::DrawSuperBoard(const SuperBoard& board_, const vec2& mouse_pos, 
 
 void BoardView::DrawSubBoard(size_t row_in_super_board, size_t col_in_super_board,
                                         const SubBoard& sub_board) const {
-  const vec2 kSubBoardTopLeft{kBoardTopLeft.x + col_in_super_board / 3.0f * kBoardLength,
-                              kBoardTopLeft.y + row_in_super_board / 3.0f * kBoardLength};
-
+  const vec2 kSubBoardTopLeft = GetSubBoardTopLeft(row_in_super_board, col_in_super_board);
   DrawSubBoardBackgroundForCompletion(row_in_super_board, col_in_super_board, sub_board);
   DrawGrid(kSubBoardTopLeft + kSubBoardMargin,
            kSubBoardTopLeft + kSubBoardLength - kSubBoardMargin,
@@ -38,8 +36,6 @@ void BoardView::DrawSubBoard(size_t row_in_super_board, size_t col_in_super_boar
 
 void BoardView::DrawSubBoardBackgroundForCompletion(size_t row_in_super_board, size_t col_in_super_board,
                                                                const SubBoard& sub_board) const {
-  const vec2 kSubBoardTopLeft{kBoardTopLeft.x + col_in_super_board / 3.0f * kBoardLength,
-                              kBoardTopLeft.y + row_in_super_board / 3.0f * kBoardLength};
   if (sub_board.IsComplete()) {
     if (sub_board.GetWinner() == WinState::kPlayer1Win) {
       DrawSubBoardBackground(row_in_super_board, col_in_super_board, kPlayer1ColorLight);
@@ -53,8 +49,7 @@ void BoardView::DrawSubBoardBackgroundForCompletion(size_t row_in_super_board, s
 
 void BoardView::DrawSubBoardBackground(size_t row_in_super_board, size_t col_in_super_board,
                                                   const ci::Color& color) const {
-  const vec2 kSubBoardTopLeft{kBoardTopLeft.x + col_in_super_board / 3.0f * kBoardLength,
-                              kBoardTopLeft.y + row_in_super_board / 3.0f * kBoardLength};
+  const vec2 kSubBoardTopLeft = GetSubBoardTopLeft(row_in_super_board, col_in_super_board);
   ci::gl::color(color);
   ci::gl::drawSolidRect(ci::Rectf(kSubBoardTopLeft.x,
                                   kSubBoardTopLeft.y,
@@ -64,8 +59,8 @@ void BoardView::DrawSubBoardBackground(size_t row_in_super_board, size_t col_in_
 
 void BoardView::DrawSubBoardMarks(size_t row_in_super_board, size_t col_in_super_board,
                                              const vector<vector<Mark>>& marks) const {
-  for (size_t row_in_sub_board = 0; row_in_sub_board < 3; row_in_sub_board++) {
-    for (size_t col_in_sub_board = 0; col_in_sub_board < 3; col_in_sub_board++) {
+  for (size_t row_in_sub_board = 0; row_in_sub_board < kBoardSize; row_in_sub_board++) {
+    for (size_t col_in_sub_board = 0; col_in_sub_board < kBoardSize; col_in_sub_board++) {
       if (marks[row_in_sub_board][col_in_sub_board].GetState() == Mark::MarkData::kPlayer1) {
         DrawMark({row_in_super_board, col_in_super_board, row_in_sub_board, col_in_sub_board}, kPlayer1Color);
       } else if (marks[row_in_sub_board][col_in_sub_board].GetState() == Mark::MarkData::kPlayer2) {
@@ -80,8 +75,8 @@ void BoardView::DrawAvailableSubBoardIndicator(const SuperBoard& board_) const {
     vec2 next_required_sub_board = board_.GetNextRequiredSubBoard();
     DrawSubBoardBackground(next_required_sub_board.x, next_required_sub_board.y, kSubBoardAvailableColor);
   } else {
-    for (size_t row = 0; row < 3; row++) {
-      for (size_t col = 0; col < 3; col++) {
+    for (size_t row = 0; row < kBoardSize; row++) {
+      for (size_t col = 0; col < kBoardSize; col++) {
         if (!board_.IsComplete()) {
           DrawSubBoardBackground(row, col, kSubBoardAvailableColorLight);
         }
@@ -93,38 +88,35 @@ void BoardView::DrawAvailableSubBoardIndicator(const SuperBoard& board_) const {
 void BoardView::DrawGrid(const vec2& top_left, const vec2& bottom_right, float line_width,
                                     const ci::Color& color) const {
   ci::gl::color(color);
-  ci::gl::drawSolidRect(ci::Rectf(top_left.x,
-                                  top_left.y + (bottom_right.y - top_left.y) / 3 - line_width / 2,
-                                  bottom_right.x,
-                                  top_left.y + (bottom_right.y - top_left.y) / 3 + line_width / 2));
-  ci::gl::drawSolidRect(ci::Rectf(top_left.x,
-                                  top_left.y + (bottom_right.y - top_left.y) * 2 / 3 - line_width / 2,
-                                  bottom_right.x,
-                                  top_left.y + (bottom_right.y - top_left.y) * 2 / 3 + line_width / 2));
-  ci::gl::drawSolidRect(ci::Rectf(top_left.x + (bottom_right.x - top_left.x) / 3 - line_width / 2,
-                                  top_left.y,
-                                  top_left.x + (bottom_right.x - top_left.x) / 3 + line_width / 2,
-                                  bottom_right.y));
-  ci::gl::drawSolidRect(ci::Rectf(top_left.x + (bottom_right.x - top_left.x) * 2 / 3 - line_width / 2,
-                                  top_left.y,
-                                  top_left.x + (bottom_right.x - top_left.x) * 2 / 3 + line_width / 2,
-                                  bottom_right.y));
+  for (size_t grid_line_num = 1; grid_line_num < kBoardSize; grid_line_num++) {
+    // Draws horizontal grid line
+    ci::gl::drawSolidRect(ci::Rectf(top_left.x,
+                                    top_left.y + (bottom_right.y - top_left.y) * grid_line_num / kBoardSize - line_width / 2,
+                                    bottom_right.x,
+                                    top_left.y + (bottom_right.y - top_left.y) * grid_line_num / kBoardSize + line_width / 2));
+
+    // Draws vertical grid line
+    ci::gl::drawSolidRect(ci::Rectf(top_left.x + (bottom_right.x - top_left.x) * grid_line_num / kBoardSize - line_width / 2,
+                                    top_left.y,
+                                    top_left.x + (bottom_right.x - top_left.x) * grid_line_num / kBoardSize + line_width / 2,
+                                    bottom_right.y));
+  }
 }
 
 void BoardView::DrawMark(const Action& a, const ci::Color& color) const {
-  const vec2 kSubBoardTopLeft{kBoardTopLeft.x + a.col_in_board / 3.0f * kBoardLength,
-                              kBoardTopLeft.y + a.row_in_board / 3.0f * kBoardLength};
+  const vec2 kSubBoardTopLeft = GetSubBoardTopLeft(a.row_in_board, a.col_in_board);
+  const float kSubBoardLengthWithoutMargin = kSubBoardLength - 2 * kSubBoardMargin;
   ci::gl::color(color);
   ci::gl::drawSolidRoundedRect(
       ci::Rectf(
-          kSubBoardTopLeft.x + kSubBoardMargin + a.col_in_subboard / 3.0f * (kSubBoardLength - 2 * kSubBoardMargin)
-          + kMarkMargin,
-          kSubBoardTopLeft.y + kSubBoardMargin + a.row_in_subboard / 3.0f * (kSubBoardLength - 2 * kSubBoardMargin)
-          + kMarkMargin,
-          kSubBoardTopLeft.x + kSubBoardMargin + a.col_in_subboard / 3.0f * (kSubBoardLength - 2 * kSubBoardMargin)
-          + (kSubBoardLength - 2 * kSubBoardMargin) / 3.0f - kMarkMargin,
-          kSubBoardTopLeft.y + kSubBoardMargin + a.row_in_subboard / 3.0f * (kSubBoardLength - 2 * kSubBoardMargin)
-          + (kSubBoardLength - 2 * kSubBoardMargin) / 3.0f - kMarkMargin),
+          kSubBoardTopLeft.x + kSubBoardMargin + kSubBoardLengthWithoutMargin * a.col_in_subboard / kBoardSize +
+              kMarkMargin,
+          kSubBoardTopLeft.y + kSubBoardMargin + kSubBoardLengthWithoutMargin * a.row_in_subboard / kBoardSize +
+              kMarkMargin,
+          kSubBoardTopLeft.x + kSubBoardMargin + kSubBoardLengthWithoutMargin * a.col_in_subboard / kBoardSize +
+              kSubBoardLengthWithoutMargin / kBoardSize - kMarkMargin,
+          kSubBoardTopLeft.y + kSubBoardMargin + kSubBoardLengthWithoutMargin * a.row_in_subboard / kBoardSize +
+              kSubBoardLengthWithoutMargin / kBoardSize - kMarkMargin),
       kMarkCornerRadius);
 }
 
@@ -132,69 +124,64 @@ void BoardView::DrawHover(const SuperBoard& board_, const vec2& mouse_pos, bool 
   if (current_player_is_human) {
     Action a = MouseToAction(mouse_pos);
     if (board_.IsValidMove(a)) {
-      ci::Color hover_color = (board_.GetCurrentPlayer() == Player::kPlayer1 ? kPlayer1ColorLight
-                                                                             : kPlayer2ColorLight);
+      ci::Color hover_color = (board_.GetCurrentPlayer() == Player::kPlayer1 ? kPlayer1ColorLight : kPlayer2ColorLight);
       DrawMark(a, hover_color);
     }
   }
 }
 
 Action BoardView::MouseToAction(vec2 mouse_pos) const {
-  // See documentation in header file for why a is initialized this way
-  Action a = {SuperBoard::kBoardSize, SuperBoard::kBoardSize, SuperBoard::kBoardSize, SuperBoard::kBoardSize};
-
-  // mouse_pos.x (and later mouse_pos.y) is subtracted by the "baseline" for the 
-  // start of the sub-board to make it easier to compute the row/col_in_sub_board fields
-  // of a. At the end of these two if-statement blocks, mouse_pos represents
-  // the offset from the top-left corner of the sub-board that the mouse is in.
-  if (mouse_pos.x < kBoardTopLeft.x) {
-    return a;
-  } else if (mouse_pos.x < kBoardTopLeft.x + kBoardLength / 3.0f) {
-    a.col_in_board = 0;
-    mouse_pos.x -= kBoardTopLeft.x;
-  } else if (mouse_pos.x < kBoardTopLeft.x + kBoardLength * 2 / 3.0f) {
-    a.col_in_board = 1;
-    mouse_pos.x -= kBoardTopLeft.x + kBoardLength / 3.0f;
-  } else if (mouse_pos.x < kBoardTopLeft.x + kBoardLength) {
-    a.col_in_board = 2;
-    mouse_pos.x -= kBoardTopLeft.x + kBoardLength * 2 / 3.0f;
-  } else {
-    return a;
+  // If mouse is not on board, return a special invalid action.
+  if (mouse_pos.x < kBoardTopLeft.x || mouse_pos.x >= kBoardTopLeft.x + kBoardLength ||
+      mouse_pos.y < kBoardTopLeft.y || mouse_pos.y >= kBoardTopLeft.y + kBoardLength) {
+    return {kBoardSize, kBoardSize, kBoardSize, kBoardSize};
   }
+  
+  Action a;
+  vec2 mouse_offset_from_sub_board_top_left;
 
-  if (mouse_pos.y < kBoardTopLeft.y) {
-    return a;
-  } else if (mouse_pos.y < kBoardTopLeft.y + kBoardLength / 3.0f) {
-    a.row_in_board = 0;
-    mouse_pos.y -= kBoardTopLeft.y;
-  } else if (mouse_pos.y < kBoardTopLeft.y + kBoardLength * 2 / 3.0f) {
-    a.row_in_board = 1;
-    mouse_pos.y -= kBoardTopLeft.y + kBoardLength / 3.0f;
-  } else if (mouse_pos.y < kBoardTopLeft.y + kBoardLength) {
-    a.row_in_board = 2;
-    mouse_pos.y -= kBoardTopLeft.y + kBoardLength * 2 / 3.0f;
-  } else {
-    return a;
+  // Find the mouse's row and column in the super-board.
+  for (size_t col = 0; col < kBoardSize; col++) {
+    float column_right_boundary = kBoardTopLeft.x + kBoardLength * (col + 1) / kBoardSize;
+    float column_left_boundary = kBoardTopLeft.x + kBoardLength * col / kBoardSize;
+    if (mouse_pos.x < column_right_boundary) {
+      a.col_in_board = col;
+      mouse_offset_from_sub_board_top_left.x = mouse_pos.x - column_left_boundary;
+      break;
+    }
   }
-
-  // Now, mouse_pos represents the offset from the top-left corner of the 
-  // sub-board that the mouse is in.
-  if (mouse_pos.x < kSubBoardMargin + (kSubBoardLength - 2 * kSubBoardMargin) / 3.0f) {
-    a.col_in_subboard = 0;
-  } else if (mouse_pos.x < kSubBoardMargin + (kSubBoardLength - 2 * kSubBoardMargin) * 2 / 3.0f) {
-    a.col_in_subboard = 1;
-  } else {
-    a.col_in_subboard = 2;
+  for (size_t row = 0; row < kBoardSize; row++) {
+    float row_bottom_boundary = kBoardTopLeft.y + kBoardLength * (row + 1) / kBoardSize;
+    float row_top_boundary = kBoardTopLeft.y + kBoardLength * row / kBoardSize;
+    if (mouse_pos.y < row_bottom_boundary) {
+      a.row_in_board = row;
+      mouse_offset_from_sub_board_top_left.y = mouse_pos.y - row_top_boundary;
+      break;
+    }
   }
-
-  if (mouse_pos.y < kSubBoardMargin + (kSubBoardLength - 2 * kSubBoardMargin) / 3.0f) {
-    a.row_in_subboard = 0;
-  } else if (mouse_pos.y < kSubBoardMargin + (kSubBoardLength - 2 * kSubBoardMargin) * 2 / 3.0f) {
-    a.row_in_subboard = 1;
-  } else {
-    a.row_in_subboard = 2;
+  
+  // Find the mouse's row and column in the sub-board.
+  const float kSubBoardLengthWithoutMargin = kSubBoardLength - 2 * kSubBoardMargin;
+  for (size_t col = 0; col < kBoardSize; col++) {
+    float column_right_boundary = kSubBoardMargin + kSubBoardLengthWithoutMargin * (col + 1) / kBoardSize;
+    if (mouse_offset_from_sub_board_top_left.x < column_right_boundary) {
+      a.col_in_subboard = col;
+      break;
+    }
+  }
+  for (size_t row = 0; row < kBoardSize; row++) {
+    float column_bottom_boundary = kSubBoardMargin + kSubBoardLengthWithoutMargin * (row + 1) / kBoardSize;
+    if (mouse_offset_from_sub_board_top_left.y < column_bottom_boundary) {
+      a.row_in_subboard = row;
+      break;
+    }
   }
   return a;
+}
+
+vec2 BoardView::GetSubBoardTopLeft(size_t row_in_super_board, size_t col_in_super_board) const {
+  return {kBoardTopLeft.x + kBoardLength * col_in_super_board / kBoardSize,
+          kBoardTopLeft.y + kBoardLength * row_in_super_board / kBoardSize};
 }
 
 }  // namespace visualizer

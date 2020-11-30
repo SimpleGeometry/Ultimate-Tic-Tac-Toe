@@ -21,9 +21,11 @@ class GameCompletionMessageView {
   const ci::Color kMessageFontColor = ci::Color::black();
   const ci::Font kMessageFont = ci::Font("Roboto", 24);
   
+  // Draws the message box and message indicating the winner of the game, or if there was a tie.
   void DrawGameCompletionMessage(const SuperBoard& board_);
  
  private:
+  // Sets the values of the parameters passed in, based on the winner.
   void SetMessageParameters(string& top_text, string& bottom_text, ci::Color& color, const SuperBoard& board_);
 };
   

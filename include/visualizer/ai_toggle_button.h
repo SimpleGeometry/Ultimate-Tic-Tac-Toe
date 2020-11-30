@@ -25,11 +25,11 @@ class AIToggleButton {
   
   AIToggleButton(vec2 kTopLeft, vec2 kBottomRight, ci::Color kButtonColor, ci::Color kButtonColorDark, string kButtonTitle);
   
+  // Draws the AI button, but does not handle inputs, other than visually responding to mouse hover-overs.
   void DrawAIToggleButtonsAndText(const vec2& mouse_pos, bool given_player_is_AI) const;
-  bool MouseIsOnButton(const vec2& mouse_pos) const;
   
- private:
-
+  // Returns whether the mouse is in the bounds of the button.
+  bool MouseIsOnButton(const vec2& mouse_pos) const;
 };
 
 }  // namespace visualizer

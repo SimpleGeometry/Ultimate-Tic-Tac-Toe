@@ -18,7 +18,12 @@ class StartOrResetButton {
   const ci::Color kButtonFontColor = ci::Color::black();
   const ci::Font kButtonFont = ci::Font("Roboto", 24);
 
+  // Draws the start/reset game button. If the game is in the pre-game setup stage,
+  // the button shows up as a start game button. Otherwise, the button shows up as a 
+  // reset game button. Responds to hover-overs but does not process the inputs otherwise.
   void DrawStartOrResetGameButton(const vec2& mouse_pos, CompletionStage completion_stage_) const;
+  
+  // Returns true iff the mouse is on the start/reset button.
   bool MouseIsOnStartOrResetGameButton(const vec2& mouse_pos) const;
 };
 

@@ -9,7 +9,7 @@ namespace visualizer {
 using cinder::ivec2;
 
 UltimateTicTacToeApp::UltimateTicTacToeApp() : completion_stage_(CompletionStage::kPreGame),
-                                               p1_is_AI_(true), p2_is_AI_(true) {
+                                               p1_is_AI_(false), p2_is_AI_(false) {
   ci::app::setWindowSize(ivec2(kWindowSize));
 }
 
