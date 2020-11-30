@@ -52,7 +52,8 @@ include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake")
 list(APPEND CORE_SOURCE_FILES src/core/superboard.cc src/core/subboard.cc src/core/player.cc src/core/mark.cc src/core/ai.cc)
 
 list(APPEND SOURCE_FILES    ${CORE_SOURCE_FILES}
-        src/visualizer/ultimate_tictactoe_app.cc)
+        src/visualizer/ultimate_tictactoe_app.cc src/visualizer/ai_toggle_button.cc src/visualizer/board_view.cc src/visualizer/game_completion_message_view.cc
+        src/visualizer/info_panel_view.cc src/visualizer/start_or_reset_button.cc)
 
 list(APPEND TEST_FILES tests/superboard_test.cc tests/subboard_test.cc)
 
