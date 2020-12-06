@@ -141,41 +141,23 @@ Action BoardView::MouseToAction(vec2 mouse_pos) const {
   vec2 mouse_offset_from_sub_board_top_left;
 
   // Find the mouse's row and column in the super-board.
-  for (size_t col = 0; col < kBoardSize; col++) {
-    float column_right_boundary = kBoardTopLeft.x + kBoardLength * (col + 1) / kBoardSize;
-    float column_left_boundary = kBoardTopLeft.x + kBoardLength * col / kBoardSize;
-    if (mouse_pos.x < column_right_boundary) {
-      a.col_in_board = col;
-      mouse_offset_from_sub_board_top_left.x = mouse_pos.x - column_left_boundary;
-      break;
-    }
-  }
-  for (size_t row = 0; row < kBoardSize; row++) {
-    float row_bottom_boundary = kBoardTopLeft.y + kBoardLength * (row + 1) / kBoardSize;
-    float row_top_boundary = kBoardTopLeft.y + kBoardLength * row / kBoardSize;
-    if (mouse_pos.y < row_bottom_boundary) {
-      a.row_in_board = row;
-      mouse_offset_from_sub_board_top_left.y = mouse_pos.y - row_top_boundary;
-      break;
-    }
-  }
+  size_t col_width = kBoardLength / kBoardSize;
+  size_t col = static_cast<size_t>(mouse_pos.x - kBoardTopLeft.x) / col_width;
+  mouse_offset_from_sub_board_top_left.x = mouse_pos.x - (kBoardTopLeft.x + col * col_width);
+  a.col_in_board = col;
+  
+  size_t row_width = col_width;
+  size_t row = static_cast<size_t>(mouse_pos.y - kBoardTopLeft.y) / row_width;
+  mouse_offset_from_sub_board_top_left.y = mouse_pos.y - (kBoardTopLeft.y + row * row_width);
+  a.row_in_board = row;
   
   // Find the mouse's row and column in the sub-board.
   const float kSubBoardLengthWithoutMargin = kSubBoardLength - 2 * kSubBoardMargin;
-  for (size_t col = 0; col < kBoardSize; col++) {
-    float column_right_boundary = kSubBoardMargin + kSubBoardLengthWithoutMargin * (col + 1) / kBoardSize;
-    if (mouse_offset_from_sub_board_top_left.x < column_right_boundary) {
-      a.col_in_subboard = col;
-      break;
-    }
-  }
-  for (size_t row = 0; row < kBoardSize; row++) {
-    float column_bottom_boundary = kSubBoardMargin + kSubBoardLengthWithoutMargin * (row + 1) / kBoardSize;
-    if (mouse_offset_from_sub_board_top_left.y < column_bottom_boundary) {
-      a.row_in_subboard = row;
-      break;
-    }
-  }
+  size_t sub_board_col_width = kSubBoardLengthWithoutMargin / kBoardSize;
+  a.col_in_subboard = static_cast<size_t>(mouse_offset_from_sub_board_top_left.x - kSubBoardMargin) / sub_board_col_width;
+  size_t sub_board_row_width = sub_board_col_width;
+  a.row_in_subboard = static_cast<size_t>(mouse_offset_from_sub_board_top_left.y - kSubBoardMargin) / sub_board_row_width;
+  
   return a;
 }
 

@@ -10,7 +10,9 @@ InfoPanelView::InfoPanelView() : P1_AI_toggle_button_(kP1AIToggleButtonTopLeft, 
                                                       kP1AIToggleButtonTitle),
                                  P2_AI_toggle_button_(kP2AIToggleButtonTopLeft, kP2AIToggleButtonBottomRight,
                                                       kP2AIToggleButtonColor, kP2AIToggleButtonColorDark,
-                                                      kP2AIToggleButtonTitle) {}
+                                                      kP2AIToggleButtonTitle),
+                                 start_or_reset_button_(kStartOrResetButtonTopLeft, kStartOrResetButtonBottomRight,
+                                                        kStartOrResetButtonColor, kStartOrResetButtonColorDark) {}
 
 void InfoPanelView::DrawInfoPanel(const SuperBoard& board_, const vec2& mouse_pos,
                                   const CompletionStage& completion_stage_, bool p1_is_AI, bool p2_is_AI) {
@@ -20,8 +22,8 @@ void InfoPanelView::DrawInfoPanel(const SuperBoard& board_, const vec2& mouse_po
 
   start_or_reset_button_.DrawStartOrResetGameButton(mouse_pos, completion_stage_);
   if (completion_stage_ == CompletionStage::kPreGame) {
-    P1_AI_toggle_button_.DrawAIToggleButtonsAndText(mouse_pos, p1_is_AI);
-    P2_AI_toggle_button_.DrawAIToggleButtonsAndText(mouse_pos, p2_is_AI);
+    P1_AI_toggle_button_.DrawAIToggleButtonAndText(mouse_pos, p1_is_AI);
+    P2_AI_toggle_button_.DrawAIToggleButtonAndText(mouse_pos, p2_is_AI);
   }
   if (completion_stage_ == CompletionStage::kPostGame) {
     game_completion_message_view_.DrawGameCompletionMessage(board_);
@@ -29,7 +31,7 @@ void InfoPanelView::DrawInfoPanel(const SuperBoard& board_, const vec2& mouse_po
 }
 
 bool InfoPanelView::MouseIsOnStartOrResetGameButton(const vec2& mouse_pos) {
-  return start_or_reset_button_.MouseIsOnStartOrResetGameButton(mouse_pos);
+  return start_or_reset_button_.MouseIsOnButton(mouse_pos);
 }
 
 bool InfoPanelView::MouseIsOnP1AIToggleButton(const vec2& mouse_pos) {

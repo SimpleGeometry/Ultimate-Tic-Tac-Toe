@@ -33,6 +33,12 @@ class InfoPanelView {
   const ci::Color kP2AIToggleButtonColorDark = ci::Color(56 / 255.0f, 147 / 255.0f, 192 / 255.0f);
   const string kP1AIToggleButtonTitle = "Player 1 Select";
   const string kP2AIToggleButtonTitle = "Player 2 Select";
+  
+  // Parameters for initializing the start/reset button
+  const vec2 kStartOrResetButtonTopLeft = {1250, 750};
+  const vec2 kStartOrResetButtonBottomRight = {1550, 850};
+  const ci::Color kStartOrResetButtonColor = ci::Color::gray(0.65);
+  const ci::Color kStartOrResetButtonColorDark = ci::Color::gray(0.55);
 
   InfoPanelView();
 
@@ -56,9 +62,9 @@ class InfoPanelView {
 
  private:
   GameCompletionMessageView game_completion_message_view_;
-  StartOrResetButton start_or_reset_button_;
   AIToggleButton P1_AI_toggle_button_;
   AIToggleButton P2_AI_toggle_button_;
+  StartOrResetButton start_or_reset_button_;
 };
 
 }  // namespace visualizer
