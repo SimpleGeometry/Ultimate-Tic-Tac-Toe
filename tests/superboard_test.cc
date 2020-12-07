@@ -104,6 +104,70 @@ TEST_CASE("Testing SuperBoard's PlayMove method") {
   }
 }
 
+TEST_CASE("Testing SuperBoard's ReverseAction method") {
+  SECTION("Reversing a move at start of game should throw an exception") {
+    SuperBoard board;
+    REQUIRE_THROWS_AS(board.ReverseAction(), std::exception);
+  }
+  
+  SECTION("Reverse the first move") {
+    SuperBoard board;
+    board.PlayMove({1, 2, 0, 2});
+    board.ReverseAction();
+    REQUIRE(board.GetState()[1][2].GetState()[0][2].GetState() == Mark::MarkData::kNone);
+    REQUIRE(board.GetCurrentPlayer() == Player::kPlayer1);
+    REQUIRE_FALSE(board.NextRequiredSubBoardExists());
+  }
+  
+  SECTION("Reverse a move when the game is complete") {
+    SuperBoard board;
+    board.PlayMove({1, 2, 0, 2});
+    board.PlayMove({0, 2, 1, 2});
+    board.PlayMove({1, 2, 2, 2});
+    board.PlayMove({2, 2, 1, 2});
+    board.PlayMove({1, 2, 1, 2});
+    board.PlayMove({0, 0, 1, 1});
+    board.PlayMove({1, 1, 1, 0});
+    board.PlayMove({1, 0, 1, 1});
+    board.PlayMove({1, 1, 1, 2});
+    board.PlayMove({2, 0, 1, 1});
+    board.PlayMove({1, 1, 1, 1});
+    board.PlayMove({2, 1, 1, 0});
+    board.PlayMove({1, 0, 0, 0});
+    board.PlayMove({0, 0, 1, 0});
+    board.PlayMove({1, 0, 0, 1});
+    board.PlayMove({0, 1, 1, 0});
+    board.PlayMove({1, 0, 0, 2});
+    board.ReverseAction();
+    
+    REQUIRE(board.GetState()[0][1].GetState()[1][0].GetState() == Mark::MarkData::kPlayer2);
+    REQUIRE(board.GetState()[1][0].GetState()[0][2].GetState() == Mark::MarkData::kNone);
+    REQUIRE(board.GetCurrentPlayer() == Player::kPlayer1);
+    REQUIRE(board.NextRequiredSubBoardExists());
+    REQUIRE(board.GetNextRequiredSubBoard() == ci::vec2(1, 0));
+    REQUIRE_FALSE(board.IsComplete());
+  }
+  
+  SECTION("Reverse multiple moves in a row") {
+    SuperBoard board;
+    board.PlayMove({1, 2, 0, 2});
+    board.PlayMove({0, 2, 1, 2});
+    board.PlayMove({1, 2, 2, 2});
+    board.PlayMove({2, 2, 1, 2});
+    board.PlayMove({1, 2, 1, 2});
+    board.ReverseAction();
+    board.ReverseAction();
+    board.ReverseAction();
+    REQUIRE(board.GetState()[0][2].GetState()[1][2].GetState() == Mark::MarkData::kPlayer2);
+    REQUIRE(board.GetState()[1][2].GetState()[2][2].GetState() == Mark::MarkData::kNone);
+    REQUIRE(board.GetState()[2][2].GetState()[1][2].GetState() == Mark::MarkData::kNone);
+    REQUIRE(board.GetState()[1][2].GetState()[1][2].GetState() == Mark::MarkData::kNone);
+    REQUIRE(board.GetCurrentPlayer() == Player::kPlayer1);
+    REQUIRE(board.NextRequiredSubBoardExists());
+    REQUIRE(board.GetNextRequiredSubBoard() == ci::vec2(1, 2));
+  }
+}
+  
 TEST_CASE("Testing SuperBoard's GetWinner method") {
   SECTION("Get winner at start of game (none)") {
     SuperBoard board;
