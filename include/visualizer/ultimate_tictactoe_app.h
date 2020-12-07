@@ -16,7 +16,7 @@ namespace visualizer {
 using ci::vec2;
 
 // Functions as a Controller class in the Model-View-Controller design
-// pattern.
+// pattern. UI for the board design adapted from http://bejofo.net/ttt.
 class UltimateTicTacToeApp : public ci::app::App {
  public:
   UltimateTicTacToeApp();

@@ -6,9 +6,10 @@
 #include <core/subboard.h>
 #include <core/win_state.h>
 #include <core/board.h>
+#include <core/move_history_entry.h>
 
 namespace ultimate_tictactoe {
-  
+
 using std::vector;
 
 class SuperBoard : public Board<SubBoard> {
@@ -22,6 +23,12 @@ class SuperBoard : public Board<SubBoard> {
   // passed in. Throws an invalid_argument exception if the move is invalid, as
   // described by IsValidMove.
   void PlayMove(const Action& a);
+
+  // Changes the state to the previous state. Throws a runtime_error exception if there are
+  // no moves in the move history. It is allowed to call this action after the
+  // game is complete, which will cause IsComplete() to return false afterwards
+  // until the game is put back in a complete state.
+  void ReverseAction();
   
   Player GetCurrentPlayer() const;
   
@@ -46,8 +53,8 @@ class SuperBoard : public Board<SubBoard> {
   
   // Returns next_sub_board_row_ and next_sub_board_col_ packaged into a vec2.
   // Should be used in conjunction with NextRequiredSubBoardExists; if 
-  // NextRequiredSubBoardExists returns false, the returned value from this method
-  // contains outdated values and should not be used.
+  // NextRequiredSubBoardExists returns false, the returned values from this method
+  // are undefined and should not be used.
   ci::vec2 GetNextRequiredSubBoard() const;
   
   // Returns true iff there is a required next sub-board specified.
@@ -59,11 +66,15 @@ class SuperBoard : public Board<SubBoard> {
   // Variables relating to the valid sub-board that must be played on by
   // the player denoted by current_player_. If required_next_sub_board_ is
   // true, the player is restricted to a certain sub-board, specified by
-  // next_sub_board_row_ and next_sub_board_col_. The row and column are left
-  // unchanged if the required_next_sub_board_ is set to false.
+  // next_sub_board_row_ and next_sub_board_col_. The row and column may be any
+  // value (i.e. undefined) if required_next_sub_board_ is set to false.
   size_t next_sub_board_row_;
   size_t next_sub_board_col_;
   bool required_next_sub_board_;
+  
+  // Used for reversing actions easily. May also be useful for displaying a move
+  // history to the user (stretch goal).
+  vector<MoveHistoryEntry> move_history_;
   
   bool SubBoardOutOfBounds(const Action& a) const;
   
@@ -72,6 +83,8 @@ class SuperBoard : public Board<SubBoard> {
   // and column indicated by the action matches next_sub_board_row_ and
   // next_sub_board_col_.
   bool InRequiredSubBoard(const Action& a) const;
+  
+  void SwapCurrentPlayer();
 };
   
 }  // namespace ultimate_tictactoe

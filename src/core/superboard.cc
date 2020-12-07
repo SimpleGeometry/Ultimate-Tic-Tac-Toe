@@ -18,19 +18,30 @@ void SuperBoard::PlayMove(const Action& a) {
   RequireValidMove(a);
   
   grid_[a.row_in_board][a.col_in_board].PlayMove(a, current_player_);
-  if (grid_[a.row_in_subboard][a.col_in_subboard].IsComplete()) {
-    required_next_sub_board_ = false;
-  } else {
-    required_next_sub_board_ = true;
-    next_sub_board_row_ = a.row_in_subboard;
-    next_sub_board_col_ = a.col_in_subboard;
+  move_history_.push_back({a, required_next_sub_board_});
+  
+  // If the grid that would be required is complete (cannot be played on anymore)
+  // then there is no required sub-board. Otherwise, there is a required sub-board.
+  required_next_sub_board_ = !grid_[a.row_in_subboard][a.col_in_subboard].IsComplete();
+  next_sub_board_row_ = a.row_in_subboard;
+  next_sub_board_col_ = a.col_in_subboard;
+  
+  SwapCurrentPlayer();
+}
+
+void SuperBoard::ReverseAction() {
+  if (move_history_.empty()) {
+    throw std::runtime_error("There are no actions to reverse.");
   }
   
-  if (current_player_ == Player::kPlayer1) {
-    current_player_ = Player::kPlayer2;
-  } else {
-    current_player_ = Player::kPlayer1;
-  }
+  Action a = move_history_[move_history_.size() - 1].a;
+  grid_[a.row_in_board][a.col_in_board].ReverseAction(a);
+  required_next_sub_board_ = move_history_[move_history_.size() - 1].required_next_sub_board_exists;
+  next_sub_board_row_ = a.row_in_board;
+  next_sub_board_col_ = a.col_in_board;
+  SwapCurrentPlayer();
+  
+  move_history_.pop_back();
 }
 
 Player SuperBoard::GetCurrentPlayer() const {
@@ -80,6 +91,14 @@ bool SuperBoard::SubBoardOutOfBounds(const Action& a) const {
 bool SuperBoard::InRequiredSubBoard(const Action& a) const {
   return !required_next_sub_board_ || 
       (a.row_in_board == next_sub_board_row_ && a.col_in_board == next_sub_board_col_);
+}
+
+void SuperBoard::SwapCurrentPlayer() {
+  if (current_player_ == Player::kPlayer1) {
+    current_player_ = Player::kPlayer2;
+  } else {
+    current_player_ = Player::kPlayer1;
+  }
 }
   
 }  // namespace ultimate_tictactoe
