@@ -8,6 +8,8 @@ namespace ultimate_tictactoe {
   
 using std::pair;
 
+// Only works for kBoardSize = 3 boards. To generalize, generalize the implementation of
+// ConvertMoveCountToWinChanceMetric.
 class TreeSearchAI : public AI {
  public:
   // Used in the RescaleEvaluation function.
@@ -107,6 +109,22 @@ class TreeSearchAI : public AI {
   // 1 move left: 0.6
   // 0 moves left (already won): 1
   vector<vector<double>> ComputeSubBoardWinChanceMetrics(Player player) const;
+  
+  // Finds the win chance metric for a specific sub-board.
+  double ComputeWinChanceMetricInSubBoard(Player player, const SubBoard& sub_board) const;
+  
+  // These three methods get the win chance metric for the given player in the given sub-board,
+  // along a certain row, column, or diagonal. The win chance metric along a given line is considers
+  // only the number of moves needed to win along the line, or is 0 if it is impossible to win along
+  // that line; this differs from the overall win chance metric for a sub-board, which is equivalent
+  // to the max win chance metric along all lines in the sub-board.
+  double GetWinChanceMetricAlongRow(Player player, const SubBoard& sub_board, size_t row) const;
+  double GetWinChanceMetricAlongColumn(Player player, const SubBoard& sub_board, size_t col) const;
+  double GetWinChanceMetricAlongDiagonal(Player player, const SubBoard& sub_board, bool main_diagonal) const;
+  
+  // Converts a move count along a line to a win chance metric along that line. If count = -1, 
+  // the opponent has played a move on that line and it is impossible to win there.
+  double ConvertMoveCountToWinChanceMetric(int count) const;
   
   // Returns a kBoardSize by kBoardSize 2D vector which contains the number of
   // possible lines that still can be won along for each square in the super-board.

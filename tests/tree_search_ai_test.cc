@@ -166,7 +166,7 @@ TEST_CASE("Test AI GetMove method") {
       AI.UpdateState({1, 1, 1, 0});
       AI.UpdateState({1, 0, 1, 2});
 
-      REQUIRE(AI.GetMove() == Action{1, 1, 0, 0});
+      REQUIRE(AI.GetMove() == Action{0, 2, 1, 1});
     }
 
     SECTION("Get move in late game") {
@@ -537,7 +537,7 @@ TEST_CASE("Test AI EvaluateStateWithSearch method") {
 
         pair<Action, double> action_values = AI.EvaluateStateWithSearch(-1, 1, 1);
         REQUIRE(action_values.first == Action{1, 1, 0, 0});
-        REQUIRE(action_values.second == Approx(tanh(-1.3 * AI.kRescalingFactor)).epsilon(0.001));
+        REQUIRE(action_values.second == Approx(tanh(-1 * AI.kRescalingFactor)).epsilon(0.001));
       }
 
       SECTION("Evaluate state in late game") {
@@ -656,8 +656,8 @@ TEST_CASE("Test AI EvaluateStateWithSearch method") {
         AI.UpdateState({1, 0, 1, 2});
 
         pair<Action, double> action_values = AI.EvaluateStateWithSearch(-1, 1, 1);
-        REQUIRE(action_values.first == Action{1, 1, 0, 0});
-        REQUIRE(action_values.second == Approx(tanh(2.7 * AI.kRescalingFactor)).epsilon(0.001));
+        REQUIRE(action_values.first == Action{0, 2, 1, 1});
+        REQUIRE(action_values.second == Approx(tanh(2.8 * AI.kRescalingFactor)).epsilon(0.001));
       }
 
       SECTION("Evaluate state in late game") {
@@ -1044,10 +1044,12 @@ TEST_CASE("Test AI EvaluateStateWithSearch method") {
     AI.UpdateState({2, 0, 0, 0});
     AI.UpdateState({0, 0, 0, 1});
 
-    // Suppose we found that Player 1 could guarantee -3 or lower for Player 2 (i.e. get at least 3 or better)
-    // Once Player 2 finds a move that gives -2, we know this state cannot be reached.
-    pair<Action, double> action_values = AI.EvaluateStateWithSearch(-1, tanh(-3 * AI.kRescalingFactor), 2);
+    // Suppose we found that Player 2 could guarantee -1.8 or better. Once Player 1 finds a move that gives 2 for 
+    // himself, i.e. -2 for Player 2, we know that state cannot be reached. The same goes for the other two moves
+    // from Player 2; each of them gives -2.6, so this is worse than the bound. In the end, we will never find
+    // any move for Player 2 that is better than alpha, so we return alpha.
+    pair<Action, double> action_values = AI.EvaluateStateWithSearch(tanh(-1.8 * AI.kRescalingFactor), 1, 2);
     REQUIRE(action_values.first == Action{2, 0, 0, 2});
-    REQUIRE(action_values.second == Approx(tanh(-2 * AI.kRescalingFactor)).epsilon(0.001));
+    REQUIRE(action_values.second == Approx(tanh(-1.8 * AI.kRescalingFactor)).epsilon(0.001));
   }
 }
