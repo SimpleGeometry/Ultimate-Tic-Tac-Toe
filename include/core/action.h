@@ -12,6 +12,8 @@ struct Action {
   size_t col_in_board;
   size_t row_in_subboard;
   size_t col_in_subboard;
+  
+  bool operator==(const Action& other) const;
 };
   
 }  // namespace ultimate_tictactoe

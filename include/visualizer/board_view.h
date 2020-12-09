@@ -8,6 +8,7 @@ namespace ultimate_tictactoe {
 namespace visualizer {
   
 using ci::vec2;
+using ci::ivec2;
 
 class BoardView {
  public:

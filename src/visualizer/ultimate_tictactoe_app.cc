@@ -1,6 +1,7 @@
 #include "cinder/gl/gl.h"
 #include <visualizer/ultimate_tictactoe_app.h>
 #include <core/board.h>
+#include <core/tree_search_ai.h>
 
 namespace ultimate_tictactoe {
 
@@ -8,9 +9,11 @@ namespace visualizer {
   
 using cinder::ivec2;
 
-UltimateTicTacToeApp::UltimateTicTacToeApp() : completion_stage_(CompletionStage::kPreGame),
+UltimateTicTacToeApp::UltimateTicTacToeApp() : p1_AI_(TreeSearchAI()), p2_AI_(TreeSearchAI()),
+                                               completion_stage_(CompletionStage::kPreGame),
                                                p1_is_AI_(false), p2_is_AI_(false) {
   ci::app::setWindowSize(ivec2(kWindowSize));
+  ResetGameAndAIBoards();
 }
 
 void UltimateTicTacToeApp::draw() {

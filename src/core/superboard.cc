@@ -75,7 +75,7 @@ void SuperBoard::RequireValidMove(const Action &a) const {
   throw std::invalid_argument(error_string);
 }
 
-ci::vec2 SuperBoard::GetNextRequiredSubBoard() const {
+ci::ivec2 SuperBoard::GetNextRequiredSubBoard() const {
   return {next_sub_board_row_, next_sub_board_col_};
 }
 

@@ -55,7 +55,7 @@ class SuperBoard : public Board<SubBoard> {
   // Should be used in conjunction with NextRequiredSubBoardExists; if 
   // NextRequiredSubBoardExists returns false, the returned values from this method
   // are undefined and should not be used.
-  ci::vec2 GetNextRequiredSubBoard() const;
+  ci::ivec2 GetNextRequiredSubBoard() const;
   
   // Returns true iff there is a required next sub-board specified.
   bool NextRequiredSubBoardExists() const;

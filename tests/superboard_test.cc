@@ -144,7 +144,7 @@ TEST_CASE("Testing SuperBoard's ReverseAction method") {
     REQUIRE(board.GetState()[1][0].GetState()[0][2].GetState() == Mark::MarkData::kNone);
     REQUIRE(board.GetCurrentPlayer() == Player::kPlayer1);
     REQUIRE(board.NextRequiredSubBoardExists());
-    REQUIRE(board.GetNextRequiredSubBoard() == ci::vec2(1, 0));
+    REQUIRE(board.GetNextRequiredSubBoard() == ci::ivec2(1, 0));
     REQUIRE_FALSE(board.IsComplete());
   }
   
@@ -164,7 +164,7 @@ TEST_CASE("Testing SuperBoard's ReverseAction method") {
     REQUIRE(board.GetState()[1][2].GetState()[1][2].GetState() == Mark::MarkData::kNone);
     REQUIRE(board.GetCurrentPlayer() == Player::kPlayer1);
     REQUIRE(board.NextRequiredSubBoardExists());
-    REQUIRE(board.GetNextRequiredSubBoard() == ci::vec2(1, 2));
+    REQUIRE(board.GetNextRequiredSubBoard() == ci::ivec2(1, 2));
   }
 }
   
