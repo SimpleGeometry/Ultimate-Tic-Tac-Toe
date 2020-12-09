@@ -87,7 +87,7 @@ class TreeSearchAI : public AI {
   void SetSearchDepth(size_t search_depth);
   
  private:
-  size_t search_depth_on_get_move = 6;
+  size_t search_depth_on_get_move = 5;
 
   // Returns a vector of valid actions in the current state.
   vector<Action> GetValidActions() const;

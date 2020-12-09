@@ -9,8 +9,7 @@ namespace visualizer {
   
 using cinder::ivec2;
 
-UltimateTicTacToeApp::UltimateTicTacToeApp() : p1_AI_(TreeSearchAI()), p2_AI_(TreeSearchAI()),
-                                               completion_stage_(CompletionStage::kPreGame),
+UltimateTicTacToeApp::UltimateTicTacToeApp() : completion_stage_(CompletionStage::kPreGame),
                                                p1_is_AI_(false), p2_is_AI_(false) {
   ci::app::setWindowSize(ivec2(kWindowSize));
   ResetGameAndAIBoards();
@@ -53,29 +52,6 @@ void UltimateTicTacToeApp::ResetGameAndAIBoards() {
   board_ = SuperBoard();
   p1_AI_.ResetState();
   p2_AI_.ResetState();
-
-  board_.PlayMove({2, 0, 1, 2});
-  board_.PlayMove({1, 2, 0, 2});
-  board_.PlayMove({0, 2, 1, 2});
-  board_.PlayMove({1, 2, 2, 2});
-  board_.PlayMove({2, 2, 1, 2});
-  board_.PlayMove({1, 2, 1, 2});
-
-  // Move 7
-  board_.PlayMove({1, 0, 0, 2});
-  board_.PlayMove({0, 2, 2, 2});
-  board_.PlayMove({2, 2, 0, 0});
-  board_.PlayMove({0, 0, 1, 2});
-  board_.PlayMove({1, 1, 2, 2});
-  board_.PlayMove({2, 2, 2, 1});
-
-  // Move 13
-  board_.PlayMove({2, 1, 0, 0});
-  board_.PlayMove({0, 0, 0, 0});
-  board_.PlayMove({0, 0, 1, 1});
-  board_.PlayMove({1, 1, 1, 0});
-  board_.PlayMove({1, 0, 1, 2});
-  board_.PlayMove({1, 0, 1, 1});
 }
 
 void UltimateTicTacToeApp::HandleBoardClick(cinder::app::MouseEvent event) {

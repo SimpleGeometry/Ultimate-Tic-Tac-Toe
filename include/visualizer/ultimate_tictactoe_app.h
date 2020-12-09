@@ -8,6 +8,7 @@
 #include <visualizer/completion_stage.h>
 #include <visualizer/info_panel_view.h>
 #include <visualizer/board_view.h>
+#include <core/tree_search_ai.h>
 
 namespace ultimate_tictactoe {
 
@@ -35,9 +36,12 @@ class UltimateTicTacToeApp : public ci::app::App {
 
  private:
   // Model variables
+  // Not exactly sure how to make a generic AI reference field and set it
+  // to a TreeSearchAI object (getting issues about l-value references binding
+  // to temporaries), so I'm having these just be TreeSearchAI objects.
   SuperBoard board_;
-  AI p1_AI_;
-  AI p2_AI_;
+  TreeSearchAI p1_AI_;
+  TreeSearchAI p2_AI_;
   
   // View variables
   BoardView board_view_;
