@@ -28,6 +28,11 @@ class SubBoard : public Board<Mark> {
   // by IsValidMove (note this is different from SuperBoard.IsValidMove()).
   void PlayMove(const Action& a, const Player& current_player);
 
+  // Reverses the action in the given sub-board, making use of the row_in_subboard
+  // and col_in_subboard fields only. If the given action was not played on the
+  // sub-board, an invalid_argument exception is thrown.
+  void ReverseAction(const Action& a);
+  
   // Returns true iff the move is valid. Conditions for validity are in the documentation
   // for RequireValidMove.
   bool IsValidMove(const Action& a) const;

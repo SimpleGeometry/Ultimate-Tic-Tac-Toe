@@ -21,6 +21,13 @@ void SubBoard::PlayMove(const Action& a, const Player& current_player) {
   grid_[a.row_in_subboard][a.col_in_subboard] = player_mark;
 }
 
+void SubBoard::ReverseAction(const Action& a) {
+  if (grid_[a.row_in_subboard][a.col_in_subboard].GetState() == Mark::MarkData::kNone) {
+    throw std::invalid_argument("The given action has not been played, so it cannot be reversed.");
+  }
+  grid_[a.row_in_subboard][a.col_in_subboard].SetState(Mark::MarkData::kNone);
+}
+
 bool SubBoard::IsValidMove(const Action& a) const {
   try {
     RequireValidMove(a);

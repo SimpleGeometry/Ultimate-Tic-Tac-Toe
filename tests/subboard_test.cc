@@ -52,6 +52,30 @@ TEST_CASE("Testing SubBoard's PlayMove method") {
   }
 }
 
+TEST_CASE("Testing SubBoard's ReverseAction method") {
+  SECTION("Reversing a move on an empty sub-board should throw an exception") {
+    SubBoard sub_board;
+    REQUIRE_THROWS_AS(sub_board.ReverseAction({0, 0, 0, 0}), std::invalid_argument);
+  }
+  
+  SECTION("Reversing a move that was not played should throw an exception") {
+    SubBoard sub_board;
+    sub_board.PlayMove({0, 0, 1, 1}, Player::kPlayer1);
+    REQUIRE_THROWS_AS(sub_board.ReverseAction({0, 0, 1, 2}), std::invalid_argument);
+  }
+  
+  SECTION("Reverse a move that was played") {
+    SubBoard sub_board;
+    sub_board.PlayMove({0, 0, 0, 0}, Player::kPlayer1);
+    sub_board.PlayMove({0, 0, 0, 1}, Player::kPlayer1);
+    sub_board.PlayMove({0, 0, 0, 2}, Player::kPlayer1);
+    sub_board.ReverseAction({0, 0, 0, 2});
+    REQUIRE(sub_board.GetState()[0][0].GetState() == Mark::MarkData::kPlayer1);
+    REQUIRE(sub_board.GetState()[0][1].GetState() == Mark::MarkData::kPlayer1);
+    REQUIRE(sub_board.GetState()[0][2].GetState() == Mark::MarkData::kNone);
+  }
+}
+
 TEST_CASE("Testing SubBoard's GetWinner method") {
   SECTION("Get winner for an empty sub-board (none)") {
     SubBoard sub_board;

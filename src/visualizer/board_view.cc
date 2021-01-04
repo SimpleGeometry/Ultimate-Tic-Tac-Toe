@@ -72,7 +72,7 @@ void BoardView::DrawSubBoardMarks(size_t row_in_super_board, size_t col_in_super
 
 void BoardView::DrawAvailableSubBoardIndicator(const SuperBoard& board_) const {
   if (board_.NextRequiredSubBoardExists()) {
-    vec2 next_required_sub_board = board_.GetNextRequiredSubBoard();
+    ivec2 next_required_sub_board = board_.GetNextRequiredSubBoard();
     DrawSubBoardBackground(next_required_sub_board.x, next_required_sub_board.y, kSubBoardAvailableColor);
   } else {
     for (size_t row = 0; row < kBoardSize; row++) {
